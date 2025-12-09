@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inaanak Aguinaldo Quiz - Positive Ninong Edition! 🎄</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Floating Parol Decorations -->
+    <div class="parol" style="top: 10%; left: 10%;">⭐</div>
+    <div class="parol" style="top: 20%; right: 15%; animation-delay: 1s;">🎄</div>
+    <div class="parol" style="bottom: 15%; left: 20%; animation-delay: 2s;">✨</div>
+    <div class="parol" style="bottom: 25%; right: 10%; animation-delay: 1.5s;">🎁</div>
+    <div class="parol" style="top: 50%; left: 5%; animation-delay: 0.5s;">🔔</div>
+    <div class="parol" style="top: 60%; right: 8%; animation-delay: 2.5s;">☃️</div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎅 Inaanak Aguinaldo Quiz 🎄</h1>
+            <p>"Ninong/Ninang loves you! Let's see how you're doing!" 💝</p>
+        </div>
+
+        <!-- Money Display -->
+        <div class="money-display">🎁 ₱<span id="currentAmount">500</span></div>
+
+        <!-- Score Breakdown -->
+        <div class="score-breakdown hidden" id="scoreBreakdown">
+            <div class="score-item">Base: ₱<span id="baseDisplay">500</span></div>
+            <div class="score-item bonus hidden" id="bonusDisplay"></div>
+            <div class="score-item penalty hidden" id="penaltyDisplay"></div>
+        </div>
+
+        <!-- Ninong Meter -->
+        <div class="ninong-meter" id="ninongMeter">
+            💝 Ninong's Heart: <span id="generosityLevel">Full of love for you!</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+        </div>
+
+        <!-- Question Number -->
+        <div class="question-number hidden" id="questionNum">Question 1 of 8</div>
+
+        <!-- Question Text -->
+        <div id="question" class="question"></div>
+
+        <!-- Answer Buttons -->
+        <div class="btn-group" id="btns">
+            <button onclick="answer('yes')" class="btn-yes">✅ OO NAMAN!</button>
+            <button onclick="answer('no')" class="btn-no">❌ HINDI PO</button>
+        </div>
+
+        <!-- Fun Fact -->
+        <div class="fun-fact hidden" id="funFact"></div>
+
+        <!-- Result Display -->
+        <div id="gift" class="gift hidden">🎁</div>
+        <div id="result" class="result hidden"></div>
+        
+        <!-- Screenshot Note -->
+        <div id="screenshotNote" class="screenshot-note hidden">
+            📸 <strong>IMPORTANT REQUIREMENT!</strong> 📸<br>
+            Screenshot this and send to Ninong/Ninang FB Messenger! 📱<br>
+            <small>(Proof of completion para makuha ang aguinaldo! 😊)</small>
+        </div>
+
+        <!-- Restart Button -->
+        <button id="restartBtn" class="restart hidden" onclick="restartQuiz()">
+            🔄 Try Again for Different Questions!
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/questions/question-bank.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
