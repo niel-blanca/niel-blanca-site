@@ -68,6 +68,12 @@ body {
     margin-bottom: 30px;
 }
 
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 50px;
+}
+
 .header h1 {
     color: #c31432;
     font-size: 36px;
