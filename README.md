@@ -1,196 +1,287 @@
-# 🎄 Pamasko Aguinaldo Quiz - Positive Ninong Edition
+# 🎄 Pamasko Aguinaldo Quiz 2025 - Enhanced Edition
 
-A fun, interactive quiz for Filipino godparents (Ninong/Ninang) to assess their godchildren (inaanak) with positive motivation, cultural humor, and realistic aguinaldo (Christmas gift money) calculations!
+A fun, intelligent, interactive Christmas quiz for Filipino godparents (Ninong/Ninang) to assess their godchildren (inaanak) with personalized feedback, behavior analysis, and realistic aguinaldo calculations!
+
+## 🆕 What's New in Version 2.0
+
+### ✨ Major Enhancements
+- **Smarter Scoring System**: Multi-dimensional behavioral analysis
+- **GCash Voucher Layout**: Professional prize display with voucher codes
+- **Intelligent Messaging**: Personalized feedback based on behavior patterns
+- **Enhanced Questions**: 20 behavioral questions covering 10 categories
+- **Local Storage**: Session history tracking without database
+- **Better UX**: Smooth animations, mobile-responsive, accessibility features
+
+### 💰 Prize System (₱20 - ₱500)
+- **Base Amount**: ₱500
+- **Dynamic Calculation**: Based on percentage score + bonuses
+- **Bonus System**:
+  - 90%+: +₱100 (Exceptional)
+  - 80-89%: +₱50 (Outstanding)
+  - 70-79%: +₱25 (Great)
+  - <45%: -₱50 (Needs Work)
 
 ## 📁 Project Structure
 
 ```
 pamasko/
-├── index.html                      # Main HTML file
+├── index.html                          # Main HTML file
 ├── css/
-│   └── style.css                   # All styles and animations
+│   ├── style.css                       # Core styles & layout
+│   └── components.css                  # Component-specific styles
 ├── js/
-│   ├── main.js                     # Core quiz logic and functionality
+│   ├── config.js                       # Configuration constants
+│   ├── main.js                         # Main application logic
+│   ├── storage.js                      # Local storage manager
+│   ├── scoring.js                      # Scoring engine
+│   ├── messages.js                     # Message generator
 │   └── questions/
-│       └── question-bank.js        # Question database and endings
-└── README.md                       # This file
+│       └── question-bank.js            # Question database (20 questions)
+├── .gitignore                          # Git ignore file
+├── LICENSE                             # MIT License
+└── README.md                           # This file
 ```
 
 ## ✨ Features
 
-### 🎯 **Smart Question System**
-- **30+ Questions** across 7 categories:
-  - Values & Relationship
-  - Behavior & Character
-  - Education & Growth
-  - Responsibility & Honesty
-  - Goals & Dreams
-  - Gratitude & Values
-  - Humility & Wisdom
-  - Social & Community
+### 🎯 **Smart Scoring System**
+- **Multi-dimensional Analysis**: 
+  - Raw score calculation
+  - Percentage-based grading
+  - Category breakdown (responsibility, integrity, respect, etc.)
+  - Dominant trait identification
+  - Behavior flag detection
 
-- **Random Selection**: Each quiz picks 8 random questions from different categories
-- **No Repetition**: Questions are shuffled for variety every time
+### 🎓 **10 Assessment Categories**
+1. **Responsibility** - Household chores, duties
+2. **Integrity** - Honesty, academic integrity
+3. **Respect** - Filipino values, manners
+4. **Discipline** - Screen time, organization
+5. **Ambition** - Goals, future planning
+6. **Education** - Study habits, achievement
+7. **Gratitude** - Family appreciation
+8. **Financial** - Money management
+9. **Social** - Relationships, community
+10. **Emotional Intelligence** - Conflict resolution
 
-### 💰 **Realistic Aguinaldo Calculation**
-- **Base Amount**: ₱500
-- **Score-Based**: Final amount depends on quiz performance
-- **Range**: ₱30 - ₱600
-- **Formula**: Base × Multiplier + Bonus
+### 💬 **Intelligent Messaging**
+- **5 Performance Tiers**:
+  - Exceptional (90%+)
+  - Outstanding (75-89%)
+  - Great (60-74%)
+  - Needs Improvement (45-59%)
+  - Critical (<45%)
 
-### 🎭 **8 Different Endings**
-1. **Perfect** (95%+) - ₱600 (₱500 × 1.0 + ₱100 bonus)
-2. **Excellent** (85-94%) - ₱500 (₱500 × 0.9 + ₱50 bonus)
-3. **Good** (70-84%) - ₱400 (₱500 × 0.75 + ₱25 bonus)
-4. **Needs Work** (50-69%) - ₱300 (₱500 × 0.6)
-5. **Study Harder** (<50%) - ₱250 (₱500 × 0.5)
-6. **Pride Lesson** - ₱200 (₱500 × 0.4)
-7. **Find Passion** - ₱380 (₱500 × 0.7 + ₱30 bonus)
-8. **Not Godchild** - ₱100 (honesty bonus!)
+- **Each Message Includes**:
+  - Personalized assessment based on behavior
+  - Motivational message tailored to personality
+  - Specific action plan with steps
+  - Category strength/weakness analysis
+  - Dominant trait identification
 
-### 📊 **Each Ending Includes**:
-- ✅ **Title**: Engaging and appropriate
-- ✅ **Short Message**: Personal and caring
-- ✅ **Aguinaldo Amount**: Calculated realistically
-- ✅ **Bonus/Conditions**: Humor and motivation
-- ✅ **PSA/Goals**: Actionable advice and next steps
+### 💳 **GCash-Style Voucher**
+- Professional voucher layout
+- Animated prize reveal
+- Unique voucher codes
+- Performance statistics
+- Bonus/penalty breakdown
+
+### 💾 **Local Storage System**
+- Session history (up to 50 sessions)
+- View past attempts
+- Statistics tracking
+- Export/import capability
+- No database required
 
 ### 🎨 **Beautiful Design**
-- Christmas-themed gradient background
+- Christmas-themed gradient backgrounds
 - Floating parol (star) decorations
 - Smooth animations and transitions
-- Mobile-responsive design
-- Progress tracking with visual feedback
-- "Ninong's Heart" meter showing love level
+- Mobile-responsive layout
+- Accessibility features (keyboard nav, screen readers)
 
-### 📱 **Interactive Elements**
-- Animated money counter
-- Score breakdown display
-- Fun facts with Filipino culture and humor
-- Smooth question transitions
-- Screenshot reminder for FB Messenger
-
-## 🚀 How to Use
+## 🚀 Quick Start
 
 ### Installation
 ```bash
-# 1. Download/clone the project
-# 2. Ensure folder structure is correct:
-pamasko/
-├── index.html
-├── css/style.css
-├── js/main.js
-└── js/questions/question-bank.js
+# 1. Clone or download the repository
+git clone https://github.com/yourusername/pamasko-quiz.git
+
+# 2. Navigate to the project folder
+cd pamasko-quiz
 
 # 3. Open index.html in your browser
-# No server required! Pure HTML/CSS/JS
+# No build process or server required!
 ```
 
 ### Usage
 1. Open `index.html` in any modern web browser
-2. Answer 8 randomly selected questions
-3. View your personalized result with aguinaldo amount
-4. Screenshot and send to Ninong/Ninang on FB Messenger
-5. Click "Try Again" for different questions!
+2. Answer 10 randomly selected questions
+3. View your personalized result with:
+   - GCash-style voucher with prize amount
+   - Detailed behavioral assessment
+   - Personalized motivation
+   - Specific action plan
+4. Screenshot and send to Ninong/Ninang on FB Messenger!
+5. Click "Try Again" for different questions
 
-## 🎓 Educational Focus
+## 🎓 Question System
 
-All questions and endings are designed to:
-- ✅ **Motivate** rather than criticize
-- ✅ **Educate** with real facts and statistics
-- ✅ **Encourage** positive behavior and growth
-- ✅ **Guide** with actionable advice
-- ✅ **Celebrate** Filipino culture and values
+### Question Types
+- **Frequency**: How often do you do X?
+- **Scale**: Rate yourself 1-5
+- **Scenario**: What would you do in X situation?
+- **Behavior**: How do you handle X?
 
-## 💡 Fun Facts Feature
+### Each Question Includes
+- Clear, relatable text in Filipino
+- 4 answer options with point values (0-5)
+- Trait mapping for personality analysis
+- Educational insight/fun fact
 
-Each question includes a fun fact that:
-- Mixes reality with humor
-- Provides educational value
-- References Filipino culture
-- Includes statistics and research
-- Motivates positive change
+### Sample Questions
+- "Tumutulong ka ba sa household chores?"
+- "Gaano ka ka-honest sa parents?"
+- "May nakita kang ₱500 sa mesa. Ano gagawin?"
+- "Sinasabi mo ba 'Po' at 'Opo'?"
 
-Examples:
-- "Kids doing chores earn 40% more in their careers later!"
-- "Only 15% ng inaanak knows their ninong's birthday"
-- "Bill Gates reads 50 books per year!"
+## 🎯 Scoring Details
 
-## 🎯 Scoring System
+### Point System
+- Each question: 0-5 points
+- Total possible: 50 points (10 questions × 5)
+- Percentage calculated: (actual/50) × 100
 
-### Points Distribution:
-- **Positive behaviors**: +50 to +100 points
-- **Neutral answers**: 0 points
-- **Negative behaviors**: -25 to -100 points
+### Prize Calculation Formula
+```
+baseAmount = 500
+multiplier = percentage / 100
+bonus = based on tier
+finalAmount = (baseAmount × multiplier) + bonus
+finalAmount = max(20, min(500, finalAmount))
+```
 
-### Special Cases:
-- Forced endings for critical answers (pride, not godchild)
-- Bonus points for exceptional behavior
-- Scaled multipliers based on overall performance
+### Behavior Analysis
+- Tracks dominant personality traits
+- Identifies strength categories
+- Flags areas needing improvement
+- Provides category-wise breakdown
 
-## 🔧 Customization
+## 🔧 Configuration
+
+### Edit `js/config.js`
+```javascript
+const CONFIG = {
+    BASE_AMOUNT: 500,        // Base prize amount
+    MIN_AMOUNT: 20,          // Minimum prize
+    MAX_AMOUNT: 500,         // Maximum prize
+    TOTAL_QUESTIONS: 10,     // Questions per quiz
+    
+    THRESHOLDS: {            // Score thresholds
+        EXCEPTIONAL: 90,
+        OUTSTANDING: 75,
+        GREAT: 60,
+        NEEDS_IMPROVEMENT: 45
+    },
+    
+    BONUS: {                 // Bonus amounts
+        EXCEPTIONAL: 100,
+        OUTSTANDING: 50,
+        GREAT: 25,
+        PENALTY: -50
+    }
+};
+```
+
+## 🎨 Customization
 
 ### Adding New Questions
 Edit `js/questions/question-bank.js`:
 
 ```javascript
 {
-    id: "q31",
+    id: 21,
     text: "Your question here? 🎯",
-    category: "behavior", // or: values, education, character, goals, gratitude, humility, social
-    yes: { pts: 75 },
-    no: { pts: 0 },
-    fact: "💡 Your interesting fact with humor and reality!"
+    category: "responsibility", // or any category
+    type: "scale",
+    options: [
+        { text: "Option 1", value: 5, trait: "positive_trait" },
+        { text: "Option 2", value: 3, trait: "neutral_trait" },
+        { text: "Option 3", value: 1, trait: "concerning_trait" },
+        { text: "Option 4", value: 0, trait: "negative_trait" }
+    ],
+    insight: "💡 Educational fact or insight!"
 }
 ```
 
-### Modifying Endings
-Edit `ENDINGS` object in `js/questions/question-bank.js`:
+### Customizing Styles
+- **Main styles**: `css/style.css`
+- **Component styles**: `css/components.css`
+- **CSS variables** in `:root` for easy theming
 
-```javascript
-ending_name: {
-    title: "🎉 YOUR TITLE 🎉",
-    message: "Your caring message here",
-    multiplier: 0.9, // 0.0 to 1.0
-    bonus: 50, // Additional amount
-    bonusMsg: "✨ Bonus description",
-    motivation: "Motivational message",
-    psa: "📢 Actionable advice"
-}
-```
-
-### Changing Base Amount
-Edit in `js/main.js`:
-```javascript
-const baseAmount = 500; // Change to any amount
-```
-
-## 🎨 Styling Customization
-
-All styles are in `css/style.css`:
-- Colors: Search for color codes (e.g., `#c31432`)
-- Fonts: Modify `@import` and `font-family`
-- Animations: Edit `@keyframes` sections
-- Layout: Adjust `.container` max-width and padding
+### Modifying Messages
+Edit message templates in `js/messages.js`
 
 ## 📱 Browser Support
 
-- ✅ Chrome (recommended)
-- ✅ Firefox
-- ✅ Safari
-- ✅ Edge
+- ✅ Chrome 90+ (recommended)
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ Edge 90+
 - ✅ Mobile browsers (iOS Safari, Chrome Mobile)
 
-## 🙏 Credits
+### Requirements
+- JavaScript enabled
+- Local storage enabled (for history)
+- Modern browser with ES6 support
 
-Made with ❤️ for Filipino families celebrating Christmas tradition of giving aguinaldo to inaanak!
+## 🔐 Privacy & Data
+
+- **100% Client-Side**: No server, no database
+- **Local Storage Only**: Data stays on user's device
+- **No Tracking**: No analytics, no cookies
+- **Privacy-First**: Can be used completely offline
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## 📄 License
 
-Free to use and modify for personal use. Please maintain the spirit of positive motivation and Filipino cultural values!
+MIT License - see LICENSE file for details
+
+Free to use and modify for personal use. Please maintain:
+- Credit to original author
+- Spirit of positive motivation
+- Filipino cultural values
+
+## 🙏 Credits
+
+**Developer**: Niel Blanca  
+**Facebook**: [StackRealm](https://www.facebook.com/StackRealm/)  
+**Year**: 2025  
+**Version**: 2.0.0
+
+Made with ❤️ for Filipino families celebrating the Christmas tradition of giving aguinaldo!
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/yourusername/pamasko-quiz/issues)
+- **Facebook**: [StackRealm Page](https://www.facebook.com/StackRealm/)
+- **Email**: your-email@example.com
 
 ---
 
 ## 🎄 Merry Christmas! Maligayang Pasko! 🎅
 
-*"Ang tunay na yaman ay hindi pera, pero pera pa rin sana!" - Every Ninong/Ninang* 😄
+*"Ang tunay na yaman ay hindi pera, pero pera pa rin sana!"* - Every Ninong/Ninang 😄
+
+### 🌟 Remember:
+The real gift isn't the money - it's the love, guidance, and care that binds Ninong/Ninang and Inaanak together. This quiz is just a fun way to strengthen that bond!
+
+**May your Christmas be filled with joy, love, and aguinaldo!** 🎁💝

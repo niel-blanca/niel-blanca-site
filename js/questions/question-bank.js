@@ -1,451 +1,311 @@
-// js/questions/question-bank.js
-// ADVANCED PAMASKO QUIZ - Intelligent Behavior-Aware System
+// ========================================
+// PAMASKO QUIZ 2025 - QUESTION BANK
+// Enhanced question database with 20 questions
+// ========================================
 
 const QUESTION_BANK = [
-    // ========== MIXED QUESTION TYPES ==========
-    
-    // TYPE: Multiple Choice - Frequency
+    // ===== RESPONSIBILITY =====
     {
-        id: "q1",
-        type: "choice",
-        text: "Gaano ka kadalas tumulong sa household chores? 🏠",
-        category: "behavior",
+        id: 1,
+        text: "Tumutulong ka ba sa household chores nang hindi kinakailangan pang sabihan? 🏠",
+        category: "responsibility",
+        type: "frequency",
         options: [
-            { text: "Araw-araw, walang sinasabi!", value: "daily", pts: 100, trait: "responsible" },
-            { text: "Pag sinabihan lang", value: "when_asked", pts: 50, trait: "obedient" },
-            { text: "Pag may kapalit (baon, extra allowance)", value: "transactional", pts: 20, trait: "transactional" },
-            { text: "Rare, busy sa phone eh", value: "rarely", pts: -30, trait: "distracted" }
+            { text: "Araw-araw, walang sinabi!", value: 5, trait: "proactive" },
+            { text: "Madalas, 3-4x a week", value: 4, trait: "helpful" },
+            { text: "Pag sinabihan lang", value: 2, trait: "reactive" },
+            { text: "Rare, busy sa phone", value: 0, trait: "distracted" }
         ],
-        fact: "🧹 Harvard study: Kids doing daily chores earn 40% more sa career! Plus si Lola masaya, blessing yan! 💝"
+        insight: "Kids doing daily chores develop 40% better work ethic and earn more later in life!"
     },
     
-    // TYPE: Scale Rating
+    // ===== INTEGRITY =====
     {
-        id: "q2",
+        id: 2,
+        text: "Gaano ka ka-honest sa mga magulang about school performance? 📚",
+        category: "integrity",
         type: "scale",
-        text: "Sa scale ng 1-5, gaano ka ka-honest sa parents about school? 📚",
-        category: "character",
         options: [
-            { text: "5 - Bukas libro ako!", value: 5, pts: 100, trait: "honest" },
-            { text: "4 - Mostly honest", value: 4, pts: 75, trait: "truthful" },
-            { text: "3 - Depende sa situation", value: 3, pts: 40, trait: "selective" },
-            { text: "2 - Pinapaganda ko minsan", value: 2, pts: 0, trait: "creative" },
-            { text: "1 - Secret agent level", value: 1, pts: -50, trait: "secretive" }
+            { text: "100% transparent!", value: 5, trait: "honest" },
+            { text: "Mostly honest", value: 4, trait: "truthful" },
+            { text: "Depende sa situation", value: 2, trait: "selective" },
+            { text: "Pinapaganda ko minsan", value: 0, trait: "deceptive" }
         ],
-        fact: "💎 Real talk: Honesty builds trust = More freedom later! Parents respect truth over perfect lies! 🙏"
+        insight: "Honesty builds trust which leads to more freedom and better relationships!"
     },
     
-    // TYPE: Scenario-based
+    // ===== RESPECT =====
     {
-        id: "q3",
-        type: "scenario",
-        text: "May nakita kang ₱500 sa mesa. Ano gagawin mo? 💵",
-        category: "character",
+        id: 3,
+        text: "Sinasabi mo ba ang 'Po' at 'Opo' sa matatanda? 🙏",
+        category: "respect",
+        type: "frequency",
         options: [
-            { text: "Itatanong ko kung kanino", value: "ask", pts: 100, trait: "honest" },
-            { text: "Iiwan ko lang dun", value: "leave", pts: 75, trait: "cautious" },
-            { text: "Hihintayin may maghanap", value: "wait", pts: 90, trait: "patient" },
-            { text: "Kunin ko, sabihin ko later", value: "take", pts: -50, trait: "impulsive" }
+            { text: "Palagi, natural na!", value: 5, trait: "respectful" },
+            { text: "Madalas, pero minsan nakakalimutan", value: 3, trait: "trying" },
+            { text: "Pag formal lang", value: 1, trait: "selective" },
+            { text: "Hindi ako sanay", value: 0, trait: "casual" }
         ],
-        fact: "💰 Integrity test! 95% ng successful people passed this in real life. Character > Money! 👑"
+        insight: "Filipino values of respect are admired worldwide! 'Po/Opo' is our cultural treasure!"
     },
     
-    // TYPE: Frequency with context
+    // ===== DISCIPLINE =====
     {
-        id: "q4",
-        type: "choice",
-        text: "Gaano ka kadalas mag-'Thank you' at 'I love you' sa parents? 💝",
-        category: "gratitude",
+        id: 4,
+        text: "Gaano ka ka-addicted sa phone/gadgets? 📱",
+        category: "discipline",
+        type: "scale",
         options: [
-            { text: "Lagi! Part ng daily routine", value: "always", pts: 100, trait: "loving" },
-            { text: "Pag may special occasion lang", value: "occasions", pts: 40, trait: "reserved" },
-            { text: "Pag may kailangan ako", value: "transactional", pts: 0, trait: "practical" },
-            { text: "Nahihiya ako eh", value: "shy", pts: 20, trait: "shy" }
+            { text: "Balanced, may time limits", value: 5, trait: "disciplined" },
+            { text: "Moderate use lang", value: 3, trait: "controlled" },
+            { text: "Mahirap iwanan", value: 1, trait: "dependent" },
+            { text: "First & last thing bago tulog", value: 0, trait: "addicted" }
         ],
-        fact: "❤️ Science: Saying 'I love you' releases oxytocin - happiness hormone! Try it tonight, guaranteed ngiti! 😊"
+        insight: "2-hour daily screen limit improves focus by 40% and academic performance!"
     },
     
-    // TYPE: Academic performance with context
+    // ===== AMBITION =====
     {
-        id: "q5",
-        type: "choice",
-        text: "Describe your approach sa pag-aaral 📖",
+        id: 5,
+        text: "May specific goals ka ba para sa future? 🎯",
+        category: "ambition",
+        type: "clarity",
+        options: [
+            { text: "Yes! Written with action plan!", value: 5, trait: "goal_oriented" },
+            { text: "May idea pero not written", value: 3, trait: "dreamer" },
+            { text: "General lang (mag-improve)", value: 1, trait: "vague" },
+            { text: "Wala pa, go with flow", value: 0, trait: "aimless" }
+        ],
+        insight: "Harvard study: Written goals are 10x more likely to be achieved!"
+    },
+    
+    // ===== EDUCATION =====
+    {
+        id: 6,
+        text: "Nag-aaral ka ba ahead o last minute lang? 📖",
         category: "education",
+        type: "behavior",
         options: [
-            { text: "Advanced reader, nag-aaral ahead!", value: "proactive", pts: 100, trait: "proactive" },
-            { text: "On-time, sumusunod sa schedule", value: "punctual", pts: 80, trait: "disciplined" },
-            { text: "Cramming but still passing", value: "crammer", pts: 40, trait: "procrastinator" },
-            { text: "Bahala na, swertehin naman", value: "lucky", pts: -30, trait: "careless" }
+            { text: "Advanced reader, nag-aaral ahead", value: 5, trait: "proactive" },
+            { text: "On-time, sumusunod sa schedule", value: 4, trait: "punctual" },
+            { text: "Cramming pero passing", value: 2, trait: "procrastinator" },
+            { text: "Bahala na, swertehin naman", value: 0, trait: "careless" }
         ],
-        fact: "📚 Warren Buffett: 'The best investment is in yourself!' Top students plan ahead = Less stress + Better grades! 🎯"
+        insight: "Students who plan ahead reduce stress by 70% and get better grades!"
     },
     
-    // TYPE: Social behavior
+    // ===== GRATITUDE =====
     {
-        id: "q6",
+        id: 7,
+        text: "Sinasabi mo ba 'Thank you' at 'I love you' sa family? 💝",
+        category: "gratitude",
+        type: "frequency",
+        options: [
+            { text: "Daily, part ng routine!", value: 5, trait: "loving" },
+            { text: "Pag may special occasion", value: 2, trait: "reserved" },
+            { text: "Pag may kailangan lang", value: 0, trait: "transactional" },
+            { text: "Nahihiya ako eh", value: 1, trait: "shy" }
+        ],
+        insight: "Expressing gratitude releases happiness hormones and strengthens family bonds!"
+    },
+    
+    // ===== FINANCIAL LITERACY =====
+    {
+        id: 8,
+        text: "Ano ginagawa mo sa allowance/baon? 💰",
+        category: "financial",
+        type: "behavior",
+        options: [
+            { text: "May budget at savings!", value: 5, trait: "financially_smart" },
+            { text: "Ginagastos pero may natitira", value: 3, trait: "moderate" },
+            { text: "Nauubos agad, YOLO!", value: 0, trait: "impulsive" },
+            { text: "Wala akong allowance", value: 2, trait: "independent" }
+        ],
+        insight: "Saving 20% of allowance now = ₱1 Million by age 30 through compound interest!"
+    },
+    
+    // ===== CHARACTER TEST =====
+    {
+        id: 9,
+        text: "May nakita kang ₱500 sa mesa ng bahay. Ano gagawin? 💵",
+        category: "integrity",
         type: "scenario",
-        text: "May classmate na nahihirapan. Ano gagawin mo? 🤝",
-        category: "social",
         options: [
-            { text: "Tutulungan ko without asking!", value: "proactive_help", pts: 100, trait: "compassionate" },
-            { text: "Tutulungan pag nag-ask", value: "reactive_help", pts: 70, trait: "helpful" },
-            { text: "Bibigyan ko tips lang", value: "minimal", pts: 40, trait: "reserved" },
-            { text: "Busy din ako eh", value: "self_focused", pts: 0, trait: "individualist" }
+            { text: "Itatanong kung kanino", value: 5, trait: "honest" },
+            { text: "Hihintayin may maghanap", value: 4, trait: "patient" },
+            { text: "Iiwan ko lang dun", value: 3, trait: "cautious" },
+            { text: "Kunin, sabihin later", value: 0, trait: "impulsive" }
         ],
-        fact: "💪 Leadership secret: Helping others = practicing future boss skills! CEOs help, hindi nag-iisa lang! 🚀"
+        insight: "95% of successful people passed this integrity test in real life situations!"
     },
     
-    // TYPE: Respect & manners
+    // ===== SOCIAL SKILLS =====
     {
-        id: "q7",
-        type: "choice",
-        text: "Paano ka makikipag-usap sa matatanda? 👴👵",
-        category: "behavior",
-        options: [
-            { text: "'Po' at 'Opo' natural sa akin!", value: "respectful", pts: 100, trait: "respectful" },
-            { text: "Ginagamit ko pero minsan nakakalimutan", value: "trying", pts: 60, trait: "learning" },
-            { text: "Pag formal situation lang", value: "situational", pts: 30, trait: "selective" },
-            { text: "Hindi ako sanay eh", value: "casual", pts: 0, trait: "informal" }
-        ],
-        fact: "🇵🇭 Filipino pride worldwide! 'Po/Opo' = Respect culture. Other countries envy our values! Ipakita mo! 👏"
-    },
-    
-    // TYPE: Responsibility check
-    {
-        id: "q8",
-        type: "scale",
-        text: "Gaano ka ka-organized sa gamit mo? (1-5) 📱💼",
-        category: "character",
-        options: [
-            { text: "5 - Everything has its place!", value: 5, pts: 100, trait: "organized" },
-            { text: "4 - Mostly organized", value: 4, pts: 75, trait: "tidy" },
-            { text: "3 - Organized chaos", value: 3, pts: 40, trait: "casual" },
-            { text: "2 - Hinahanap ko palagi", value: 2, pts: 10, trait: "messy" },
-            { text: "1 - Ano nga ba gamit ko?", value: 1, pts: -20, trait: "chaotic" }
-        ],
-        fact: "🎯 CEOs are 85% more organized! Small things = Big things. Master your stuff, master your life! 📊"
-    },
-    
-    // TYPE: Goal-oriented
-    {
-        id: "q9",
-        type: "choice",
-        text: "May specific goals ka ba for this year? 🎯",
-        category: "goals",
-        options: [
-            { text: "Yes! Written with action plan pa!", value: "detailed", pts: 100, trait: "planner" },
-            { text: "May idea pero not written", value: "mental", pts: 70, trait: "casual_planner" },
-            { text: "General lang (mag-improve)", value: "vague", pts: 40, trait: "unfocused" },
-            { text: "Wala pa, go with the flow", value: "none", pts: 0, trait: "spontaneous", end: "find_passion" }
-        ],
-        fact: "🌟 Harvard: Written goals = 10x more likely to achieve! Isulat mo, mangyayari yan! ✍️"
-    },
-    
-    // TYPE: Screen time awareness
-    {
-        id: "q10",
-        type: "choice",
-        text: "Gaano ka-addicted sa phone/gadgets? 📱",
-        category: "behavior",
-        options: [
-            { text: "Balanced, may set time limits", value: "controlled", pts: 100, trait: "disciplined" },
-            { text: "Uso lang, pero may control", value: "moderate", pts: 70, trait: "balanced" },
-            { text: "Mahirap iwanan, pero kaya", value: "dependent", pts: 30, trait: "attached" },
-            { text: "First thing tingin, last thing bago tulog", value: "addicted", pts: -20, trait: "addicted" }
-        ],
-        fact: "📵 Studies show: 2-hour screen limit = 40% better focus! Balance is key! Nature + Tech = Perfect! 🌳📱"
-    },
-    
-    // TYPE: Sibling relationship
-    {
-        id: "q11",
-        type: "scenario",
+        id: 10,
         text: "Relationship mo sa siblings/cousins? 👫",
         category: "social",
+        type: "quality",
         options: [
-            { text: "Best friends! Super close!", value: "close", pts: 100, trait: "family_oriented" },
-            { text: "Okay naman, walang away", value: "neutral", pts: 60, trait: "peaceful" },
-            { text: "On-off, minsan okay minsan hindi", value: "volatile", pts: 30, trait: "moody" },
-            { text: "Laging nag-aaway", value: "conflict", pts: -30, trait: "conflicted" }
+            { text: "Best friends, super close!", value: 5, trait: "family_oriented" },
+            { text: "Okay naman, walang away", value: 3, trait: "peaceful" },
+            { text: "On-off, minsan okay minsan hindi", value: 1, trait: "unstable" },
+            { text: "Laging nag-aaway", value: 0, trait: "conflicted" }
         ],
-        fact: "👨‍👩‍👧‍👦 Real talk: Siblings = lifelong teammates! Invest in that relationship now, thank me later! 🤝"
+        insight: "Strong sibling bonds = lifelong support system and better mental health!"
     },
     
-    // TYPE: Initiative & proactiveness
+    // ===== COMPASSION =====
     {
-        id: "q12",
-        type: "scenario",
-        text: "May nakita kang basura sa sahig ng bahay. Gagawin mo? 🗑️",
-        category: "behavior",
+        id: 11,
+        text: "Tumutulong ka ba sa classmate na nahihirapan? 🤝",
+        category: "social",
+        type: "behavior",
         options: [
-            { text: "Pick up kaagad!", value: "proactive", pts: 100, trait: "responsible" },
-            { text: "Kukunin ko pag papunta na ako dun", value: "convenient", pts: 60, trait: "practical" },
-            { text: "Sabihin ko sa kasama kong pulutin", value: "delegate", pts: 20, trait: "delegator" },
-            { text: "Not my basura, not my problem", value: "ignore", pts: -40, trait: "apathetic" }
+            { text: "Tutulungan without asking!", value: 5, trait: "compassionate" },
+            { text: "Tutulungan pag nag-ask", value: 3, trait: "helpful" },
+            { text: "Bibigyan tips lang", value: 2, trait: "minimal" },
+            { text: "Busy din ako eh", value: 0, trait: "self_focused" }
         ],
-        fact: "♻️ Bayanihan spirit! Small acts = Big character. Future leaders see problems & solve them! 💪"
+        insight: "Helping others develops future leadership skills and builds networks!"
     },
     
-    // TYPE: Financial literacy
+    // ===== ORGANIZATION =====
     {
-        id: "q13",
-        type: "choice",
-        text: "Ano ginagawa mo sa allowance/money mo? 💰",
-        category: "character",
+        id: 12,
+        text: "Gaano ka ka-organized sa gamit mo? 📱💼",
+        category: "discipline",
+        type: "scale",
         options: [
-            { text: "May budget, may savings!", value: "saver", pts: 100, trait: "financially_smart" },
-            { text: "Ginagastos pero may natitira", value: "balanced", pts: 70, trait: "moderate" },
-            { text: "Nauubos agad, YOLO!", value: "spender", pts: 20, trait: "impulsive" },
-            { text: "Ano bang allowance?", value: "none", pts: 50, trait: "independent" }
+            { text: "Everything has its place!", value: 5, trait: "organized" },
+            { text: "Mostly organized", value: 4, trait: "tidy" },
+            { text: "Organized chaos", value: 2, trait: "casual" },
+            { text: "Hinahanap ko palagi", value: 0, trait: "messy" }
         ],
-        fact: "💵 Money fact: Save 20% habit now = ₱1M by age 30! Start young, compound interest magic! 📈"
+        insight: "Organized people are 85% more productive and successful in careers!"
     },
     
-    // TYPE: Emotional intelligence
+    // ===== ACHIEVEMENT =====
     {
-        id: "q14",
-        type: "scenario",
+        id: 13,
+        text: "May achievement ka ba this year? (Awards, recognition) 🏆",
+        category: "achievement",
+        type: "quality",
+        options: [
+            { text: "Yes! Multiple achievements!", value: 5, trait: "achiever" },
+            { text: "May isa o dalawa", value: 4, trait: "successful" },
+            { text: "Small wins lang", value: 2, trait: "progressing" },
+            { text: "Wala pa this year", value: 0, trait: "struggling" }
+        ],
+        insight: "Every achievement, big or small, builds confidence and momentum!"
+    },
+    
+    // ===== EMOTIONAL INTELLIGENCE =====
+    {
+        id: 14,
         text: "Galit ka sa kapatid mo. Ano gagawin? 😤",
+        category: "emotional_intelligence",
+        type: "scenario",
+        options: [
+            { text: "Kausapin after cool down", value: 5, trait: "mature" },
+            { text: "Mag-sorry agad", value: 4, trait: "humble" },
+            { text: "Hintayin siya mag-approach", value: 2, trait: "passive" },
+            { text: "Cold war for days", value: 0, trait: "stubborn" }
+        ],
+        insight: "Emotional intelligence (EQ) beats IQ in predicting life success!"
+    },
+    
+    // ===== HUMILITY =====
+    {
+        id: 15,
+        text: "Kahit may achievements, humble ka pa rin ba? 🌟",
         category: "character",
+        type: "behavior",
         options: [
-            { text: "Kausapin after magcool down", value: "mature", pts: 100, trait: "emotionally_intelligent" },
-            { text: "Mag-sorry agad", value: "peacemaker", pts: 90, trait: "humble" },
-            { text: "Hintayin siya mag-approach", value: "passive", pts: 40, trait: "passive" },
-            { text: "Cold war for days", value: "stubborn", pts: -30, trait: "stubborn" }
+            { text: "Yes, thankful sa lahat!", value: 5, trait: "humble" },
+            { text: "Share pero di nag-brag", value: 4, trait: "balanced" },
+            { text: "Post everywhere with details", value: 1, trait: "showy" },
+            { text: "Flex to the max!", value: 0, trait: "arrogant" }
         ],
-        fact: "🧠 EQ > IQ sa success! 90% ng top performers = High emotional intelligence. Master your emotions! 💪"
+        insight: "Humility + Success = Unstoppable! Pride destroys, humility builds!"
     },
     
-    // TYPE: Humility check
+    // ===== TIME MANAGEMENT =====
     {
-        id: "q15",
-        type: "choice",
-        text: "May achievement ka, paano mo ishashare? 🏆",
-        category: "humility",
-        options: [
-            { text: "Simple lang, thank everyone who helped", value: "humble", pts: 100, trait: "humble" },
-            { text: "Share pero hindi nag-brag", value: "balanced", pts: 80, trait: "confident" },
-            { text: "Post everywhere with details!", value: "proud", pts: 30, trait: "showy" },
-            { text: "Flex to the max! Champion mindset!", value: "boastful", pts: -80, trait: "arrogant", end: "pride" }
-        ],
-        fact: "🙏 'Ang tunay na mayaman, di nagmamalaki' - Filipino wisdom. Humility + Success = Unstoppable! 👑"
-    },
-    
-    // TYPE: Time management
-    {
-        id: "q16",
-        type: "choice",
+        id: 16,
         text: "Paano mo ba-balance school, family, at play? ⚖️",
-        category: "education",
+        category: "discipline",
+        type: "quality",
         options: [
-            { text: "May schedule, sinusunod!", value: "organized", pts: 100, trait: "disciplined" },
-            { text: "Flexible, pero natapos lahat", value: "adaptive", pts: 75, trait: "flexible" },
-            { text: "Minsan nakakalimutan", value: "forgetful", pts: 30, trait: "scattered" },
-            { text: "Last minute lahat", value: "crammer", pts: 0, trait: "procrastinator" }
+            { text: "May schedule, sinusunod!", value: 5, trait: "disciplined" },
+            { text: "Flexible, pero natapos lahat", value: 4, trait: "adaptive" },
+            { text: "Minsan nakakalimutan", value: 2, trait: "forgetful" },
+            { text: "Last minute lahat", value: 0, trait: "procrastinator" }
         ],
-        fact: "⏰ Time = Money! Students with schedules = 60% less stress + better grades! Plan ahead = Win! 📅"
+        insight: "Time management = life management! Successful people schedule everything!"
     },
     
-    // TYPE: Community involvement
+    // ===== COMMUNITY =====
     {
-        id: "q17",
-        type: "choice",
+        id: 17,
         text: "Involved ka ba sa community/church activities? ⛪",
         category: "social",
+        type: "frequency",
         options: [
-            { text: "Yes! Active member ako!", value: "active", pts: 100, trait: "community_leader" },
-            { text: "Sometimes, pag may time", value: "occasional", pts: 60, trait: "participant" },
-            { text: "Rare, pag required lang", value: "minimal", pts: 20, trait: "reluctant" },
-            { text: "Hindi ako sumasali", value: "none", pts: 0, trait: "isolated" }
+            { text: "Yes! Active member!", value: 5, trait: "community_leader" },
+            { text: "Sometimes, pag may time", value: 3, trait: "participant" },
+            { text: "Rare, pag required lang", value: 1, trait: "reluctant" },
+            { text: "Hindi ako sumasali", value: 0, trait: "isolated" }
         ],
-        fact: "🌍 Bayanihan DNA! Volunteers are 42% happier + build connections. Serving others = blessing yourself! 🤝"
+        insight: "Community volunteers are 42% happier and build lifelong connections!"
     },
     
-    // TYPE: Academic integrity
+    // ===== ACADEMIC INTEGRITY =====
     {
-        id: "q18",
+        id: 18,
+        text: "May exam, hindi ka nag-review. May nanghihingi ng sagot. Gagawin mo? 📝",
+        category: "integrity",
         type: "scenario",
-        text: "May exam, hindi ka nag-review. May naniningil ng sagot. Gagawin mo? 📝",
-        category: "character",
         options: [
-            { text: "No! Kaya ko to, sariling sagot", value: "integrity", pts: 100, trait: "honest" },
-            { text: "Hihiramin pero guilty ako", value: "tempted", pts: 20, trait: "conflicted" },
-            { text: "Titingin, emergency naman", value: "cheater", pts: -50, trait: "dishonest" },
-            { text: "Mag-blangko na lang, honest", value: "honest_fail", pts: 80, trait: "principled" }
+            { text: "No! Kaya ko to, sariling sagot", value: 5, trait: "honest" },
+            { text: "Hihiramin pero guilty ako", value: 2, trait: "conflicted" },
+            { text: "Titingin, emergency naman", value: 0, trait: "cheater" },
+            { text: "Mag-blangko, honest", value: 4, trait: "principled" }
         ],
-        fact: "💎 Integrity = Who you are when nobody's watching. Cheating = short-term gain, long-term shame! 🎯"
+        insight: "Integrity = who you are when nobody's watching. Build it young!"
     },
     
-    // TYPE: Gratitude awareness
+    // ===== GRATITUDE DEPTH =====
     {
-        id: "q19",
-        type: "scale",
-        text: "Naa-appreciate mo ba sacrifices ng parents? (1-5) 💪",
+        id: 19,
+        text: "Naa-appreciate mo ba sacrifices ng parents? 💪",
         category: "gratitude",
+        type: "scale",
         options: [
-            { text: "5 - Sobrang grateful!", value: 5, pts: 100, trait: "grateful" },
-            { text: "4 - Yes, sinasabi ko rin", value: 4, pts: 80, trait: "appreciative" },
-            { text: "3 - Alam ko naman", value: 3, pts: 50, trait: "aware" },
-            { text: "2 - Hindi ko masyado naiisip", value: 2, pts: 10, trait: "unaware" },
-            { text: "1 - Obligasyon nila yan", value: 1, pts: -60, trait: "entitled" }
+            { text: "Sobrang grateful! Alam ko lahat!", value: 5, trait: "grateful" },
+            { text: "Yes, sinasabi ko rin", value: 4, trait: "appreciative" },
+            { text: "Alam ko naman", value: 2, trait: "aware" },
+            { text: "Hindi ko masyado naiisip", value: 0, trait: "unaware" }
         ],
-        fact: "👨‍👩‍👧 Real talk: Every meal, tuition, birthday = OT, stress, sacrifice. They work for YOUR dreams! ❤️"
+        insight: "Every meal, tuition, birthday = OT, stress, sacrifice. They work for YOUR dreams!"
     },
     
-    // TYPE: Conflict resolution
+    // ===== CONFLICT RESOLUTION =====
     {
-        id: "q20",
-        type: "choice",
+        id: 20,
         text: "May away kayo ng friend. Paano mo reresolve? 💔",
         category: "social",
+        type: "scenario",
         options: [
-            { text: "Kausapin ASAP, ayusin", value: "proactive", pts: 100, trait: "mature" },
-            { text: "Give space, then talk", value: "patient", pts: 85, trait: "wise" },
-            { text: "Wait na siya mag-approach", value: "passive", pts: 40, trait: "passive" },
-            { text: "Move on, marami pang friends", value: "avoidant", pts: -20, trait: "dismissive" }
+            { text: "Kausapin ASAP, ayusin", value: 5, trait: "mature" },
+            { text: "Give space, then talk", value: 4, trait: "wise" },
+            { text: "Wait na siya mag-approach", value: 2, trait: "passive" },
+            { text: "Move on, marami pang friends", value: 0, trait: "dismissive" }
         ],
-        fact: "🤝 Social intelligence! Strong relationships = 75% ng life happiness. Invest in connections! 💝"
+        insight: "Strong relationships = 75% of life happiness. Invest in connections!"
     }
 ];
 
-// ========== PERSONALITY PROFILES & SMART ENDINGS ==========
-
-const PERSONALITY_TRAITS = {
-    // Positive traits
-    responsible: { weight: 1.0, category: "positive" },
-    honest: { weight: 1.0, category: "positive" },
-    humble: { weight: 1.0, category: "positive" },
-    compassionate: { weight: 0.9, category: "positive" },
-    disciplined: { weight: 0.9, category: "positive" },
-    proactive: { weight: 0.9, category: "positive" },
-    grateful: { weight: 0.9, category: "positive" },
-    
-    // Neutral traits
-    practical: { weight: 0.6, category: "neutral" },
-    reserved: { weight: 0.6, category: "neutral" },
-    casual: { weight: 0.5, category: "neutral" },
-    
-    // Negative traits
-    impulsive: { weight: 0.3, category: "negative" },
-    careless: { weight: 0.2, category: "negative" },
-    arrogant: { weight: 0.1, category: "negative" },
-    dishonest: { weight: 0.1, category: "negative" },
-    entitled: { weight: 0.1, category: "negative" }
-};
-
-const DYNAMIC_ENDINGS = {
-    // Profile-based endings
-    exemplary_child: {
-        criteria: { positive_ratio: 0.90, avg_score: 85 },
-        title: "🌟 EXEMPLARY INAANAK! WORLD-CLASS! 🌟",
-        baseMultiplier: 1.2,
-        bonus: 150,
-        bonusMsg: "⭐ Role Model Bonus: +₱150! You inspire others!",
-        personalizedMsg: (traits) => {
-            const top = traits[0];
-            return `You're ${top}! That's rare and valuable. Keep shining!`;
-        },
-        motivation: "You're not just good - you're EXCEPTIONAL! Your character, discipline, and heart are top-tier. You're already a leader, even if you don't realize it yet. The world needs more people like you!",
-        psa: "🎯 CHALLENGE: Mentor someone younger. Share your habits. Your success can multiply through others! Be the change! 🚀"
-    },
-    
-    great_kid: {
-        criteria: { positive_ratio: 0.75, avg_score: 70 },
-        title: "⭐ GREAT INAANAK! DOING EXCELLENT! ⭐",
-        baseMultiplier: 1.0,
-        bonus: 100,
-        bonusMsg: "💪 Excellence Bonus: +₱100! Almost perfect!",
-        personalizedMsg: (traits) => {
-            return `Your strength: ${traits[0]}. Small improvements will make you unstoppable!`;
-        },
-        motivation: "You're doing REALLY well! A few tweaks here and there, and you'll be world-class. Your foundation is strong - now build higher!",
-        psa: "📈 FOCUS AREAS: Work on those 2-3 weak spots. Track monthly progress. You're closer to excellence than you think! 💯"
-    },
-    
-    good_potential: {
-        criteria: { positive_ratio: 0.60, avg_score: 55 },
-        title: "👍 GOOD INAANAK WITH HUGE POTENTIAL! 👍",
-        baseMultiplier: 0.85,
-        bonus: 50,
-        bonusMsg: "🌱 Growth Potential: +₱50 investment in you!",
-        personalizedMsg: (traits) => {
-            const needs_work = traits.filter(t => PERSONALITY_TRAITS[t]?.category !== "positive");
-            return `You're ${traits[0]} but need to work on: ${needs_work.slice(0,2).join(", ")}. Totally doable!`;
-        },
-        motivation: "You have MASSIVE potential waiting to explode! Right now you're a seed - with the right care, you'll become a tree! Don't settle for 'good enough'!",
-        psa: "🎯 30-DAY PLAN: Pick ONE habit to change. ONE skill to build. Track it daily. Small wins = BIG changes! Start today! 🔥"
-    },
-    
-    needs_guidance: {
-        criteria: { positive_ratio: 0.40, avg_score: 40 },
-        title: "💪 INAANAK NEEDS GUIDANCE & SUPPORT 💪",
-        baseMultiplier: 0.70,
-        bonus: 0,
-        bonusMsg: "🧭 Direction Fund: Time to realign priorities!",
-        personalizedMsg: (traits) => {
-            const negative = traits.filter(t => PERSONALITY_TRAITS[t]?.category === "negative");
-            return `We need to address: ${negative.slice(0,2).join(" and ")}. But I believe in you!`;
-        },
-        motivation: "Real talk: You're off track. But OFF TRACK ≠ LOST! Everyone struggles. What matters? GETTING BACK UP! I'm here to help guide you back!",
-        psa: "🚨 IMMEDIATE ACTION: (1) Family talk TODAY. (2) List what's wrong. (3) Ask for help. We're a team - let's fix this together! 💚"
-    },
-    
-    crisis_mode: {
-        criteria: { positive_ratio: 0.25, avg_score: 25 },
-        title: "🚨 URGENT: INAANAK NEEDS INTERVENTION! 🚨",
-        baseMultiplier: 0.50,
-        bonus: 0,
-        bonusMsg: "⚠️ Wake-Up Call Fund: This is serious!",
-        personalizedMsg: (traits) => {
-            return `Multiple red flags detected. Primary concerns: behavior and character. Time for change!`;
-        },
-        motivation: "This isn't a joke anymore. Your choices are leading you down a bad path. But it's NOT too late! Right now, TODAY, you can turn everything around. But you need to COMMIT!",
-        psa: "⚡ EMERGENCY PLAN: Parents meeting NOW. Counselor if needed. Reset habits completely. Delete bad influences. This is your wake-up call - take it seriously! 🆘"
-    },
-    
-    // Special endings
-    pride_intervention: {
-        triggered_by: "arrogant",
-        title: "🙏 HUMILITY INTERVENTION NEEDED! 🙏",
-        baseMultiplier: 0.40,
-        bonus: -50,
-        bonusMsg: "💎 Character Penalty: -₱50. Pride is expensive!",
-        motivation: "Your talent is real. Your achievements are real. But your PRIDE is killing your potential! Talent + Arrogance = NOTHING. Talent + Humility = EVERYTHING!",
-        psa: "🔄 7-DAY RESET: Compliment 5 people daily. Say 'thank you' 10x. Help without bragging. Watch your life change! Pride blocks blessings! 🚫"
-    },
-    
-    honesty_crisis: {
-        triggered_by: "dishonest",
-        title: "💎 INTEGRITY EMERGENCY! 💎",
-        baseMultiplier: 0.35,
-        bonus: -100,
-        bonusMsg: "⚠️ Trust Penalty: -₱100. Honesty is everything!",
-        motivation: "Dishonesty destroys EVERYTHING - relationships, opportunities, self-respect. One lie needs 100 more lies. STOP NOW before it's too late!",
-        psa: "🛑 IMMEDIATE ACTION: Confess everything to parents TODAY. Clean slate. Rebuild trust step by step. Your future depends on this! ⏰"
-    },
-    
-    find_purpose: {
-        triggered_by: "no_goals",
-        title: "🎯 DISCOVER YOUR PURPOSE! 🎯",
-        baseMultiplier: 0.75,
-        bonus: 50,
-        bonusMsg: "🧭 Exploration Bonus: +₱50 to find yourself!",
-        motivation: "Not knowing your direction is normal! But SEARCHING for it is mandatory! Your passion exists - you just haven't met it yet. Let's go find it!",
-        psa: "✨ 30-DAY QUEST: Try 5 new activities. Shadow 3 professionals. Research 5 careers. Journal what excites you. Your calling is waiting! 🔍"
-    },
-    
-    screen_addiction: {
-        triggered_by: "addicted",
-        title: "📵 DIGITAL DETOX NEEDED! 📵",
-        baseMultiplier: 0.60,
-        bonus: 0,
-        bonusMsg: "⚠️ Reality Check: Screen time destroying your potential!",
-        motivation: "Your phone is stealing your LIFE! Every scroll = minutes of dreams dying. Real success happens OFFLINE. Time to break free!",
-        psa: "🔋 DETOX PLAN: 2-hour daily limit. No phone 1hr before bed. Replace with: reading, sports, family time. Reclaim your life! 💪"
-    }
-};
-
-// Export
+// Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { QUESTION_BANK, PERSONALITY_TRAITS, DYNAMIC_ENDINGS };
+    module.exports = { QUESTION_BANK };
 }
