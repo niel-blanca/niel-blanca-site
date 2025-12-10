@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎅 Ninong/Ninang Verification Portal</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/verify.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Floating Decorations -->
+    <div class="parol-container">
+        <div class="parol" style="top: 10%; left: 10%;">⭐</div>
+        <div class="parol" style="top: 20%; right: 15%; animation-delay: 1s;">🎄</div>
+        <div class="parol" style="bottom: 15%; left: 20%; animation-delay: 2s;">✨</div>
+        <div class="parol" style="bottom: 25%; right: 10%; animation-delay: 1.5s;">🎁</div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header-title">🎅 Ninong/Ninang Verification Portal 🎄</h1>
+            <p class="header-subtitle">Verify your Inaanak's quiz results and approve their aguinaldo!</p>
+        </header>
+
+        <!-- Verification Input Section -->
+        <section class="verify-section">
+            <div class="verify-card">
+                <div class="verify-header">
+                    <div class="verify-icon">🔍</div>
+                    <h2>Enter Verification Code</h2>
+                    <p>Type the code from your Inaanak's voucher</p>
+                </div>
+
+                <div class="verify-input-group">
+                    <input 
+                        type="text" 
+                        id="verificationCodeInput" 
+                        class="verify-input" 
+                        placeholder="PMSK-12345678"
+                        maxlength="13"
+                    >
+                    <button class="btn btn-verify" id="verifyBtn">
+                        <span class="btn-icon">✓</span>
+                        Verify Code
+                    </button>
+                </div>
+
+                <div class="verify-tips">
+                    <div class="tip-item">💡 Code format: PMSK-XXXXXXXX</div>
+                    <div class="tip-item">📱 Ask your Inaanak to send screenshot via Messenger</div>
+                    <div class="tip-item">🔒 All results are stored locally on their device</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Display Section -->
+        <section id="verifyResultSection" class="verify-result-section hidden">
+            <!-- Success/Error Message -->
+            <div id="verifyMessage" class="verify-message"></div>
+
+            <!-- Verified Result Card -->
+            <div id="verifiedResult" class="verified-result hidden">
+                <!-- Header with Status -->
+                <div class="verified-header">
+                    <div class="verified-badge verified-badge-success">
+                        <span class="badge-icon">✓</span>
+                        VERIFIED
+                    </div>
+                    <h3>Quiz Result Details</h3>
+                </div>
+
+                <!-- Student Info -->
+                <div class="result-info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Verification Code</div>
+                        <div class="info-value" id="verifiedCode">PMSK-12345678</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Date Taken</div>
+                        <div class="info-value" id="verifiedDate">Dec 10, 2025</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Total Score</div>
+                        <div class="info-value" id="verifiedScore">85%</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Prize Amount</div>
+                        <div class="info-value prize-value" id="verifiedPrize">₱450</div>
+                    </div>
+                </div>
+
+                <!-- Performance Summary -->
+                <div class="performance-summary">
+                    <h4>📊 Performance Summary</h4>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Raw Score:</span>
+                            <span class="summary-value" id="verifiedRawScore">42/50</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Grade:</span>
+                            <span class="summary-value" id="verifiedGrade">B+</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Dominant Trait:</span>
+                            <span class="summary-value" id="verifiedTrait">Responsible</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Assessment:</span>
+                            <span class="summary-value" id="verifiedTier">Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown -->
+                <div class="category-breakdown">
+                    <h4>📈 Category Analysis</h4>
+                    <div id="categoryChart" class="category-chart">
+                        <!-- Categories will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Question & Answer Details -->
+                <div class="answer-details">
+                    <h4>📝 Detailed Answers</h4>
+                    <div id="answersList" class="answers-list">
+                        <!-- Answers will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Approval Actions -->
+                <div class="approval-actions">
+                    <h4>🎁 Ninong/Ninang Decision</h4>
+                    <div class="approval-buttons">
+                        <button class="btn btn-approve" id="approveBtn">
+                            <span class="btn-icon">✓</span>
+                            Approve & Give Aguinaldo
+                        </button>
+                        <button class="btn btn-adjust" id="adjustBtn">
+                            <span class="btn-icon">✎</span>
+                            Adjust Amount
+                        </button>
+                        <button class="btn btn-print" onclick="window.print()">
+                            <span class="btn-icon">🖨️</span>
+                            Print Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made with ❤️ by <strong>Niel Blanca</strong> - Verification Portal 2025</p>
+            <p><a href="index.html">← Back to Quiz</a></p>
+        </footer>
+    </div>
+
+    <!-- Adjust Amount Modal -->
+    <div id="adjustModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✎ Adjust Aguinaldo Amount</h3>
+                <button class="modal-close" id="closeAdjustBtn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="adjust-form">
+                    <label for="adjustAmount">New Amount (₱):</label>
+                    <input 
+                        type="number" 
+                        id="adjustAmount" 
+                        class="adjust-input"
+                        min="20"
+                        max="1000"
+                        step="10"
+                    >
+                    <label for="adjustReason">Reason (optional):</label>
+                    <textarea 
+                        id="adjustReason" 
+                        class="adjust-textarea"
+                        placeholder="Why are you adjusting the amount?"
+                        rows="3"
+                    ></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="saveAdjustBtn">Save Adjustment</button>
+                <button class="btn btn-secondary" id="cancelAdjustBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/questions/question-bank.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/verify.js"></script>
+</body>
+</html>

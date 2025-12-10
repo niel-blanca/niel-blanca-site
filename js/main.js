@@ -1,579 +1,544 @@
-// js/main.js - ADVANCED PAMASKO QUIZ ENGINE
-// Intelligent, Behavior-Aware, Dynamic Scoring System
+// ========================================
+// PAMASKO QUIZ 2025 - MAIN APPLICATION
+// Complete quiz logic and UI management
+// ========================================
 
-// ========== GLOBAL STATE ==========
-let quizState = {
-    currentQuestionIndex: 0,
-    selectedQuestions: [],
-    answers: [],
-    personalityTraits: {},
-    totalPoints: 0,
-    maxPossiblePoints: 0,
-    behaviorFlags: [],
-    moodLevel: 5
-};
-
-const BASE_AMOUNT = 500;
-const MAX_QUESTIONS = 8;
-
-// Mood levels for Ninong meter
-const MOOD_LEVELS = [
-    { level: 0, text: "Concerned... 😟", color: "#e74c3c" },
-    { level: 1, text: "Needs improvement 😐", color: "#e67e22" },
-    { level: 2, text: "Getting there! 🙂", color: "#f39c12" },
-    { level: 3, text: "Good progress! 😊", color: "#3498db" },
-    { level: 4, text: "Doing great! 🤩", color: "#2ecc71" },
-    { level: 5, text: "Proud of you! 💝", color: "#27ae60" }
-];
-
-// ========== INITIALIZATION ==========
-function initQuiz() {
-    quizState = {
+// Application State
+const App = {
+    state: {
         currentQuestionIndex: 0,
         selectedQuestions: [],
         answers: [],
-        personalityTraits: {},
-        totalPoints: 0,
-        maxPossiblePoints: 0,
-        behaviorFlags: [],
-        moodLevel: 5
-    };
+        scoreData: null,
+        prizeData: null,
+        messageData: null,
+        isQuizActive: false
+    },
     
-    selectIntelligentQuestions();
-    renderCurrentQuestion();
-    updateUI();
-}
-
-// ========== INTELLIGENT QUESTION SELECTION ==========
-function selectIntelligentQuestions() {
-    const categories = {};
-    
-    // Group by category
-    QUESTION_BANK.forEach(q => {
-        if (!categories[q.category]) categories[q.category] = [];
-        categories[q.category].push(q);
-    });
-    
-    const selected = [];
-    const categoryKeys = Object.keys(categories);
-    
-    // Ensure diversity: at least one from each major category
-    const priorityCategories = ['behavior', 'character', 'education', 'social', 'goals'];
-    
-    priorityCategories.forEach(cat => {
-        if (categories[cat] && categories[cat].length > 0) {
-            const randomQ = categories[cat][Math.floor(Math.random() * categories[cat].length)];
-            selected.push(randomQ);
+    // Initialize Application
+    init: function() {
+        log('Initializing Pamasko Quiz...');
+        
+        // Check storage availability
+        if (!StorageManager.isAvailable()) {
+            error('Local storage not available!');
+            alert('Warning: Your quiz history cannot be saved. Browser storage is disabled.');
         }
-    });
+        
+        // Hide loading screen after minimum time
+        setTimeout(() => {
+            this.hideLoading();
+            this.startQuiz();
+        }, CONFIG.LOADING_MIN_TIME);
+        
+        // Setup event listeners
+        this.setupEventListeners();
+    },
     
-    // Fill remaining slots with variety
-    while (selected.length < MAX_QUESTIONS && categoryKeys.length > 0) {
-        const randomCat = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
-        const availableQuestions = categories[randomCat].filter(
-            q => !selected.find(s => s.id === q.id)
+    // Setup Event Listeners
+    setupEventListeners: function() {
+        const restartBtn = document.getElementById('restartBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        
+        if (restartBtn) restartBtn.addEventListener('click', () => this.restart());
+        if (historyBtn) historyBtn.addEventListener('click', () => this.showHistory());
+        if (closeHistoryBtn) closeHistoryBtn.addEventListener('click', () => this.hideHistory());
+        if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+
+        // Share button
+        const shareBtn = document.getElementById('shareBtn');
+        const closeShareBtn = document.getElementById('closeShareBtn');
+        const downloadVoucherBtn = document.getElementById('downloadVoucherBtn');
+        
+        if (shareBtn) shareBtn.addEventListener('click', () => this.showShareModal());
+        if (closeShareBtn) closeShareBtn.addEventListener('click', () => this.hideShareModal());
+        if (downloadVoucherBtn) downloadVoucherBtn.addEventListener('click', () => this.downloadVoucher());
+    },
+    
+    // Start Quiz
+    startQuiz: function() {
+        log('Starting new quiz...');
+        
+        // Reset state
+        this.state = {
+            currentQuestionIndex: 0,
+            selectedQuestions: [],
+            answers: [],
+            scoreData: null,
+            prizeData: null,
+            messageData: null,
+            isQuizActive: true
+        };
+        
+        // Select random questions
+        this.selectQuestions();
+        
+        // Show quiz section
+        this.showSection('quizSection');
+        
+        // Render first question
+        this.renderQuestion();
+        
+        // Update progress
+        this.updateProgress();
+    },
+    
+    // Select Random Questions
+    selectQuestions: function() {
+        const shuffled = [...QUESTION_BANK].sort(() => Math.random() - 0.5);
+        this.state.selectedQuestions = shuffled.slice(0, CONFIG.TOTAL_QUESTIONS);
+        log('Selected questions:', this.state.selectedQuestions.length);
+    },
+    
+    // Render Current Question
+    renderQuestion: function() {
+        const question = this.state.selectedQuestions[this.state.currentQuestionIndex];
+        
+        if (!question) {
+            error('No question to render!');
+            return;
+        }
+        
+        // Update question number
+        document.getElementById('questionNumber').textContent = 
+            `Question ${this.state.currentQuestionIndex + 1} of ${CONFIG.TOTAL_QUESTIONS}`;
+        
+        // Update category
+        document.getElementById('questionCategory').textContent = 
+            this.formatCategory(question.category);
+        
+        // Update question text with animation
+        const questionEl = document.getElementById('questionText');
+        questionEl.style.opacity = '0';
+        setTimeout(() => {
+            questionEl.textContent = question.text;
+            questionEl.style.opacity = '1';
+        }, 100);
+        
+        // Render answer options
+        this.renderAnswerOptions(question);
+        
+        // Update fun fact
+        document.getElementById('funFactText').textContent = question.insight;
+        
+        // Update progress
+        this.updateProgress();
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    
+    // Render Answer Options
+    renderAnswerOptions: function(question) {
+        const container = document.getElementById('answerOptions');
+        container.innerHTML = '';
+        
+        question.options.forEach((option, index) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'answer-option';
+            optionDiv.style.animationDelay = `${index * 0.1}s`;
+            
+            optionDiv.innerHTML = `
+                <div class="answer-number">${index + 1}</div>
+                <div class="answer-text">${option.text}</div>
+            `;
+            
+            optionDiv.addEventListener('click', () => this.handleAnswer(option, question));
+            
+            container.appendChild(optionDiv);
+        });
+    },
+    
+    // Handle Answer Selection
+    handleAnswer: function(option, question) {
+        // Record answer
+        this.state.answers.push({
+            questionId: question.id,
+            category: question.category,
+            value: option.value,
+            trait: option.trait,
+            text: option.text
+        });
+        
+        log(`Answer recorded: Q${question.id} = ${option.value}pts`);
+        
+        // Move to next question or finish
+        this.state.currentQuestionIndex++;
+        
+        if (this.state.currentQuestionIndex < this.state.selectedQuestions.length) {
+            // Next question
+            setTimeout(() => {
+                this.renderQuestion();
+            }, CONFIG.ANIMATION_DELAY);
+        } else {
+            // Quiz complete
+            setTimeout(() => {
+                this.finishQuiz();
+            }, CONFIG.RESULT_DELAY);
+        }
+    },
+    
+    // Finish Quiz
+    finishQuiz: function() {
+        log('Quiz finished. Calculating results...');
+        
+        this.state.isQuizActive = false;
+        
+        // Calculate score
+        this.state.scoreData = ScoringEngine.calculateScore(
+            this.state.answers,
+            this.state.selectedQuestions
         );
         
-        if (availableQuestions.length > 0) {
-            const randomQ = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
-            selected.push(randomQ);
-        }
-    }
-    
-    quizState.selectedQuestions = shuffleArray(selected.slice(0, MAX_QUESTIONS));
-    
-    // Calculate max possible points
-    quizState.maxPossiblePoints = quizState.selectedQuestions.reduce((sum, q) => {
-        const maxPoints = Math.max(...q.options.map(opt => opt.pts));
-        return sum + maxPoints;
-    }, 0);
-}
-
-// ========== RENDER QUESTION ==========
-function renderCurrentQuestion() {
-    const question = quizState.selectedQuestions[quizState.currentQuestionIndex];
-    
-    if (!question) {
-        showFinalResult();
-        return;
-    }
-    
-    // Update question text
-    document.getElementById('question').textContent = question.text;
-    
-    // Update question number
-    document.getElementById('questionNum').textContent = 
-        `Question ${quizState.currentQuestionIndex + 1} of ${MAX_QUESTIONS}`;
-    document.getElementById('questionNum').classList.remove('hidden');
-    
-    // Render dynamic buttons based on question type
-    renderAnswerButtons(question);
-    
-    // Show fun fact
-    const factEl = document.getElementById('funFact');
-    factEl.textContent = question.fact;
-    factEl.classList.remove('hidden');
-    
-    // Update progress
-    updateProgress();
-    
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ========== DYNAMIC BUTTON RENDERING ==========
-function renderAnswerButtons(question) {
-    const btnGroup = document.getElementById('btns');
-    btnGroup.innerHTML = ''; // Clear existing buttons
-    
-    question.options.forEach((option, index) => {
-        const btn = document.createElement('button');
-        btn.textContent = option.text;
-        btn.onclick = () => handleAnswer(option, question);
+        // Calculate prize
+        this.state.prizeData = ScoringEngine.calculatePrize(this.state.scoreData);
         
-        // Style based on type
-        if (question.type === 'scale') {
-            btn.className = 'btn-scale';
-            btn.style.flex = '0 0 calc(20% - 10px)';
-        } else if (question.options.length === 2) {
-            btn.className = option.value.includes('yes') || option.value === 'always' ? 'btn-yes' : 'btn-no';
-        } else if (question.options.length === 3) {
-            btn.className = 'btn-choice';
-            btn.style.flex = '0 0 calc(33.33% - 13px)';
-        } else {
-            btn.className = 'btn-choice';
-            btn.style.flex = '1 1 100%';
-            btn.style.marginBottom = '10px';
-        }
+        // Generate message
+        this.state.messageData = MessageGenerator.generate(
+            this.state.scoreData,
+            this.state.prizeData
+        );
         
-        btnGroup.appendChild(btn);
-    });
-    
-    // Adjust layout for many options
-    if (question.options.length > 3) {
-        btnGroup.style.flexDirection = 'column';
-    } else {
-        btnGroup.style.flexDirection = 'row';
-    }
-}
-
-// ========== ANSWER HANDLING ==========
-function handleAnswer(option, question) {
-    // Record answer
-    quizState.answers.push({
-        questionId: question.id,
-        category: question.category,
-        selectedOption: option.value,
-        points: option.pts,
-        trait: option.trait
-    });
-    
-    // Update points
-    quizState.totalPoints += option.pts;
-    
-    // Track personality trait
-    if (option.trait) {
-        quizState.personalityTraits[option.trait] = 
-            (quizState.personalityTraits[option.trait] || 0) + 1;
-    }
-    
-    // Update mood based on answer quality
-    updateMoodLevel(option.pts, question);
-    
-    // Check for triggered endings
-    if (option.end) {
-        showSpecialEnding(option.end);
-        return;
-    }
-    
-    // Check for behavior flags
-    if (option.pts < 0) {
-        quizState.behaviorFlags.push({
-            category: question.category,
-            concern: option.trait,
-            severity: Math.abs(option.pts)
+        // Save to storage
+        StorageManager.save({
+            score: this.state.scoreData,
+            prize: this.state.prizeData,
+            answers: this.state.answers,
+            questions: this.state.selectedQuestions.map(q => q.id)
         });
-    }
-    
-    // Animate points change
-    animatePointsChange(option.pts);
-    
-    // Mini celebration for good answers
-    if (option.pts >= 80) {
-        showMiniCelebration();
-    }
-    
-    // Move to next question
-    quizState.currentQuestionIndex++;
-    
-    setTimeout(() => {
-        renderCurrentQuestion();
-    }, 400);
-}
-
-// ========== MOOD SYSTEM ==========
-function updateMoodLevel(points, question) {
-    // Calculate mood based on answer quality
-    const maxPoints = Math.max(...question.options.map(opt => opt.pts));
-    const ratio = points / maxPoints;
-    
-    if (ratio >= 0.9) {
-        quizState.moodLevel = Math.min(5, quizState.moodLevel + 0.3);
-    } else if (ratio >= 0.7) {
-        quizState.moodLevel = Math.min(5, quizState.moodLevel + 0.1);
-    } else if (ratio >= 0.4) {
-        // Neutral
-    } else {
-        quizState.moodLevel = Math.max(0, quizState.moodLevel - 0.4);
-    }
-    
-    updateMoodMeter();
-}
-
-function updateMoodMeter() {
-    const moodIndex = Math.round(quizState.moodLevel);
-    const mood = MOOD_LEVELS[moodIndex];
-    
-    const meterEl = document.getElementById('ninongMeter');
-    const levelEl = document.getElementById('generosityLevel');
-    
-    levelEl.textContent = mood.text;
-    meterEl.style.background = `linear-gradient(135deg, ${mood.color} 0%, ${adjustBrightness(mood.color, 30)} 100%)`;
-}
-
-function adjustBrightness(color, percent) {
-    const num = parseInt(color.replace("#",""), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = (num >> 16) + amt;
-    const G = (num >> 8 & 0x00FF) + amt;
-    const B = (num & 0x0000FF) + amt;
-    return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
-        (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255))
-        .toString(16).slice(1);
-}
-
-// ========== ANIMATIONS ==========
-function animatePointsChange(points) {
-    const amountEl = document.getElementById('currentAmount');
-    const currentValue = parseInt(amountEl.textContent) || BASE_AMOUNT;
-    
-    // Estimate new value (rough calculation for visual feedback)
-    const progress = quizState.currentQuestionIndex / MAX_QUESTIONS;
-    const estimatedAmount = Math.round(
-        BASE_AMOUNT * (1 - progress * 0.3) + 
-        (quizState.totalPoints / quizState.maxPossiblePoints) * BASE_AMOUNT * progress
-    );
-    
-    animateValue(amountEl, currentValue, estimatedAmount, 600);
-    
-    // Show score breakdown
-    updateScoreBreakdown();
-}
-
-function showMiniCelebration() {
-    // Create confetti burst
-    const colors = ['#FFD700', '#FFA500', '#FF6B6B', '#4ECDC4', '#45B7D1'];
-    
-    for (let i = 0; i < 15; i++) {
-        setTimeout(() => {
-            createConfetti(colors[Math.floor(Math.random() * colors.length)]);
-        }, i * 30);
-    }
-}
-
-function createConfetti(color) {
-    const confetti = document.createElement('div');
-    confetti.style.position = 'fixed';
-    confetti.style.width = '10px';
-    confetti.style.height = '10px';
-    confetti.style.background = color;
-    confetti.style.left = Math.random() * window.innerWidth + 'px';
-    confetti.style.top = '-20px';
-    confetti.style.borderRadius = '50%';
-    confetti.style.zIndex = '9999';
-    confetti.style.pointerEvents = 'none';
-    
-    document.body.appendChild(confetti);
-    
-    const animation = confetti.animate([
-        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-        { transform: `translateY(${window.innerHeight}px) rotate(${360 * Math.random()}deg)`, opacity: 0 }
-    ], {
-        duration: 2000 + Math.random() * 1000,
-        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-    });
-    
-    animation.onfinish = () => confetti.remove();
-}
-
-// ========== SCORE BREAKDOWN ==========
-function updateScoreBreakdown() {
-    const breakdownEl = document.getElementById('scoreBreakdown');
-    const bonusEl = document.getElementById('bonusDisplay');
-    const penaltyEl = document.getElementById('penaltyDisplay');
-    
-    const positivePoints = quizState.answers
-        .filter(a => a.points > 0)
-        .reduce((sum, a) => sum + a.points, 0);
         
-    const negativePoints = quizState.answers
-        .filter(a => a.points < 0)
-        .reduce((sum, a) => sum + a.points, 0);
+        // Show results
+        this.showResults();
+    },
     
-    if (positivePoints > 0) {
-        bonusEl.textContent = `Bonuses: +${positivePoints} pts`;
-        bonusEl.classList.remove('hidden');
-    }
+    // Show Results
+    showResults: function() {
+        this.showSection('resultSection');
+        
+        // Animate prize amount
+        this.animatePrizeAmount();
+        
+        // Fill voucher data
+        this.fillVoucherData();
+        
+        // Fill message data
+        this.fillMessageData();
+        
+        // Update history counter
+        this.updateHistoryCounter();
+    },
     
-    if (negativePoints < 0) {
-        penaltyEl.textContent = `Penalties: ${negativePoints} pts`;
-        penaltyEl.classList.remove('hidden');
-    }
-    
-    breakdownEl.classList.remove('hidden');
-}
-
-// ========== INTELLIGENT ENDING SELECTION ==========
-function determineIntelligentEnding() {
-    // Calculate personality profile
-    const traitCounts = Object.entries(quizState.personalityTraits)
-        .sort((a, b) => b[1] - a[1]);
-    
-    const dominantTraits = traitCounts.slice(0, 3).map(t => t[0]);
-    
-    // Calculate ratios
-    const positiveCount = traitCounts.filter(([trait]) => 
-        PERSONALITY_TRAITS[trait]?.category === 'positive'
-    ).reduce((sum, [, count]) => sum + count, 0);
-    
-    const totalTraits = traitCounts.reduce((sum, [, count]) => sum + count, 0);
-    const positiveRatio = positiveCount / totalTraits;
-    
-    const avgScore = (quizState.totalPoints / quizState.maxPossiblePoints) * 100;
-    
-    // Check for triggered special endings
-    for (const trait of dominantTraits) {
-        for (const [key, ending] of Object.entries(DYNAMIC_ENDINGS)) {
-            if (ending.triggered_by === trait) {
-                return { ending, traits: dominantTraits, avgScore, positiveRatio };
+    // Animate Prize Amount
+    animatePrizeAmount: function() {
+        const element = document.getElementById('prizeAmount');
+        const target = this.state.prizeData.amount;
+        
+        let current = 0;
+        const increment = target / 50;
+        const duration = 2000;
+        const interval = duration / 50;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
             }
-        }
-    }
+            element.textContent = Math.round(current);
+        }, interval);
+    },
     
-    // Find matching profile-based ending
-    for (const [key, ending] of Object.entries(DYNAMIC_ENDINGS)) {
-        if (ending.criteria) {
-            const { positive_ratio, avg_score } = ending.criteria;
-            if (positiveRatio >= positive_ratio && avgScore >= avg_score) {
-                return { ending, traits: dominantTraits, avgScore, positiveRatio };
+    // Fill Voucher Data
+    fillVoucherData: function() {
+        const { scoreData, prizeData } = this.state;
+        
+        // Prize bonus/penalty
+        const bonusEl = document.getElementById('prizeBonus');
+        if (prizeData.bonus !== 0) {
+            bonusEl.textContent = prizeData.bonus > 0 ? 
+                `+₱${prizeData.bonus} ${prizeData.bonusReason}` : 
+                `${prizeData.bonus} ${prizeData.bonusReason}`;
+            bonusEl.className = prizeData.bonus > 0 ? 'prize-bonus positive' : 'prize-bonus negative';
+        }
+        
+        // Score title
+        document.getElementById('scoreTitle').textContent = this.state.messageData.title;
+        
+        // Score info
+        document.getElementById('scoreInfo').textContent = 
+            `Score: ${scoreData.percentage}% | Grade: ${scoreData.grade} | Trait: ${this.formatTrait(scoreData.dominantTrait)}`;
+        
+        // Stats
+        document.getElementById('statPoints').textContent = `${scoreData.raw}/${scoreData.possible}`;
+        document.getElementById('statPercentage').textContent = `${scoreData.percentage}%`;
+        document.getElementById('statAttempts').textContent = StorageManager.getAll().length;
+        
+        // Voucher code
+        document.getElementById('voucherCode').textContent = 
+            `PMSK-${Date.now().toString().slice(-8)}`;
+    },
+    
+    // Fill Message Data
+    fillMessageData: function() {
+        const { messageData } = this.state;
+        
+        document.getElementById('messageAssessment').textContent = messageData.assessment;
+        document.getElementById('messageMotivation').textContent = messageData.motivation;
+        document.getElementById('messageAction').textContent = messageData.actionPlan;
+        
+        // Insights
+        const insightsEl = document.getElementById('insightsList');
+        insightsEl.innerHTML = messageData.insights.map(insight => 
+            `<div>${insight}</div>`
+        ).join('');
+    },
+    
+    // Update Progress Bar
+    updateProgress: function() {
+        const progress = ((this.state.currentQuestionIndex + 1) / CONFIG.TOTAL_QUESTIONS) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('progressText').textContent = 
+            `${this.state.currentQuestionIndex + 1}/${CONFIG.TOTAL_QUESTIONS}`;
+    },
+    
+    // Show History Modal
+    showHistory: function() {
+        const sessions = StorageManager.getAll();
+        const listEl = document.getElementById('historyList');
+        
+        if (sessions.length === 0) {
+            listEl.innerHTML = '<div class="history-empty">No quiz history yet. Take the quiz to start tracking your progress!</div>';
+        } else {
+            listEl.innerHTML = sessions.reverse().map(session => {
+                const date = new Date(session.timestamp);
+                return `
+                    <div class="history-item">
+                        <div class="history-date">${date.toLocaleDateString()} ${date.toLocaleTimeString()}</div>
+                        <div class="history-score">Score: ${session.score.percentage}% | Grade: ${session.score.grade}</div>
+                        <div class="history-prize">Prize: ₱${session.prize.amount}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        document.getElementById('historyModal').classList.remove('hidden');
+    },
+    
+    // Hide History Modal
+    hideHistory: function() {
+        document.getElementById('historyModal').classList.add('hidden');
+    },
+    
+    // Clear History
+    clearHistory: function() {
+        if (confirm('Are you sure you want to clear all quiz history? This cannot be undone.')) {
+            StorageManager.clear();
+            this.hideHistory();
+            this.updateHistoryCounter();
+            log('History cleared');
+        }
+    },
+    
+    // Update History Counter
+    updateHistoryCounter: function() {
+        const count = StorageManager.getAll().length;
+        document.getElementById('statAttempts').textContent = count;
+    },
+    
+    // Restart Quiz
+    restart: function() {
+        log('Restarting quiz...');
+        this.startQuiz();
+    },
+    
+    // Show Section
+    showSection: function(sectionId) {
+        const sections = ['quizSection', 'resultSection'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                if (id === sectionId) {
+                    el.classList.remove('hidden');
+                    el.classList.add('fade-in');
+                } else {
+                    el.classList.add('hidden');
+                }
             }
+        });
+    },
+    
+    // Hide Loading Screen
+    hideLoading: function() {
+        const loader = document.getElementById('loadingScreen');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 300);
         }
-    }
+    },
     
-    // Default to good_potential
-    return { 
-        ending: DYNAMIC_ENDINGS.good_potential, 
-        traits: dominantTraits, 
-        avgScore, 
-        positiveRatio 
-    };
-}
+    // Format Category Name
+    formatCategory: function(category) {
+        return category
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    },
+    
+    // Format Trait Name
+    formatTrait: function(trait) {
+        return trait
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    },
 
-// ========== FINAL RESULT ==========
-function showFinalResult() {
-    // Hide quiz elements
-    document.getElementById('btns').classList.add('hidden');
-    document.getElementById('funFact').classList.add('hidden');
-    document.getElementById('question').classList.add('hidden');
-    document.getElementById('questionNum').classList.add('hidden');
-    
-    // Determine ending
-    const { ending, traits, avgScore, positiveRatio } = determineIntelligentEnding();
-    
-    // Calculate final amount
-    const finalAmount = calculateFinalAmount(ending);
-    
-    // Animate to final amount
-    const amountEl = document.getElementById('currentAmount');
-    animateValue(amountEl, parseInt(amountEl.textContent), finalAmount, 2000);
-    
-    // Show result
-    setTimeout(() => {
-        displayIntelligentResult(ending, traits, finalAmount, avgScore, positiveRatio);
-    }, 2200);
-    
-    // Complete progress
-    document.getElementById('progress').style.width = '100%';
-}
+    // ========================================
+    // Verification Code and Voucher Sharing
+    // ========================================
 
-// ========== AMOUNT CALCULATION ==========
-function calculateFinalAmount(ending) {
-    let amount = BASE_AMOUNT * ending.baseMultiplier;
-    amount += ending.bonus || 0;
-    
-    // Mood bonus
-    const moodBonus = Math.round(quizState.moodLevel * 20);
-    amount += moodBonus;
-    
-    // Consistency bonus (all positive answers)
-    const allPositive = quizState.answers.every(a => a.points >= 0);
-    if (allPositive) {
-        amount += 50;
-    }
-    
-    return Math.max(Math.round(amount), 50); // Minimum ₱50
-}
-
-// ========== DISPLAY RESULT ==========
-function displayIntelligentResult(ending, traits, finalAmount, avgScore, positiveRatio) {
-    const resultEl = document.getElementById('result');
-    
-    // Personalized message
-    const personalMsg = ending.personalizedMsg ? 
-        ending.personalizedMsg(traits) : 
-        `Your profile shows: ${traits.slice(0,2).join(", ")}`;
-    
-    // Behavior insights
-    const insights = generateBehaviorInsights(avgScore, positiveRatio);
-    
-    const html = `
-        <div class="result-title">${ending.title}</div>
+    /**
+     * Show share modal with voucher preview
+     */
+    showShareModal: function() {
+        const modal = document.getElementById('shareModal');
+        const voucherPreview = document.getElementById('voucherPreview');
+        const modalCode = document.getElementById('modalVerificationCode');
         
-        <div class="result-section">
-            <div class="result-label">🎯 Your Profile:</div>
-            ${personalMsg}
-        </div>
-        
-        <div class="result-section">
-            <div class="result-label">💬 Ninong's Message:</div>
-            ${ending.motivation}
-        </div>
-        
-        <div class="result-section">
-            <div class="result-label">📊 Performance:</div>
-            Score: <strong>${avgScore.toFixed(1)}%</strong> | 
-            Positive Traits: <strong>${(positiveRatio * 100).toFixed(0)}%</strong>
-            <div style="margin-top:8px; font-size:14px;">${insights}</div>
-        </div>
-        
-        <div class="result-section">
-            <div class="result-label">🎁 Aguinaldo:</div>
-            <strong style="font-size: 32px; color: #27ae60;">₱${finalAmount}</strong>
-        </div>
-        
-        <div class="result-section">
-            <div class="result-label">✨ ${ending.bonusMsg ? 'Bonus/Penalty:' : 'Notes:'}</div>
-            ${ending.bonusMsg || 'Standard aguinaldo based on performance'}
-        </div>
-        
-        <div class="result-section">
-            <div class="result-label">📢 Action Plan:</div>
-            ${ending.psa}
-        </div>
-        
-        ${quizState.behaviorFlags.length > 0 ? `
-        <div class="result-section" style="background:#fff3cd; padding:12px; border-radius:8px; margin-top:15px;">
-            <div class="result-label">⚠️ Areas Needing Attention:</div>
-            ${quizState.behaviorFlags.map(f => `• ${f.concern}`).join('<br>')}
-        </div>
-        ` : ''}
-    `;
-    
-    resultEl.innerHTML = html;
-    resultEl.classList.remove('hidden');
-    
-    // Show other elements
-    document.getElementById('gift').classList.remove('hidden');
-    document.getElementById('screenshotNote').classList.remove('hidden');
-    document.getElementById('restartBtn').classList.remove('hidden');
-    
-    // Celebration if score is high
-    if (avgScore >= 80) {
-        for (let i = 0; i < 30; i++) {
-            setTimeout(() => showMiniCelebration(), i * 100);
+        // Clone voucher card for preview
+        const originalVoucher = document.getElementById('voucherCard');
+        if (originalVoucher) {
+            voucherPreview.innerHTML = originalVoucher.outerHTML;
         }
-    }
-}
-
-// ========== BEHAVIOR INSIGHTS ==========
-function generateBehaviorInsights(avgScore, positiveRatio) {
-    if (avgScore >= 85 && positiveRatio >= 0.85) {
-        return "🌟 Exceptional! You're a role model!";
-    } else if (avgScore >= 70) {
-        return "💪 Strong foundation! Small tweaks needed.";
-    } else if (avgScore >= 55) {
-        return "🌱 Good potential! Focus on consistency.";
-    } else if (avgScore >= 40) {
-        return "🔄 Needs improvement. Time to level up!";
-    } else {
-        return "🚨 Serious concerns. Need immediate support!";
-    }
-}
-
-// ========== UI UPDATES ==========
-function updateProgress() {
-    const percent = (quizState.currentQuestionIndex / MAX_QUESTIONS) * 100;
-    document.getElementById('progress').style.width = percent + '%';
-}
-
-function updateUI() {
-    document.getElementById('currentAmount').textContent = BASE_AMOUNT;
-    updateMoodMeter();
-}
-
-// ========== SPECIAL ENDINGS ==========
-function showSpecialEnding(endingKey) {
-    const ending = DYNAMIC_ENDINGS[endingKey];
-    if (ending) {
-        quizState.currentQuestionIndex = MAX_QUESTIONS; // Force end
-        setTimeout(() => showFinalResult(), 500);
-    }
-}
-
-// ========== UTILITIES ==========
-function shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-}
-
-function animateValue(element, start, end, duration) {
-    const range = end - start;
-    const increment = range / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-            current = end;
-            clearInterval(timer);
+        
+        // Set verification code
+        const lastSession = StorageManager.getLast();
+        if (lastSession && lastSession.verificationCode) {
+            modalCode.textContent = lastSession.verificationCode;
         }
-        element.textContent = Math.round(current);
-    }, 16);
-}
+        
+        // Load history
+        this.loadShareHistory();
+        
+        modal.classList.remove('hidden');
+    },
 
-// ========== RESTART ==========
-function restartQuiz() {
-    document.getElementById('gift').classList.add('hidden');
-    document.getElementById('result').classList.add('hidden');
-    document.getElementById('screenshotNote').classList.add('hidden');
-    document.getElementById('restartBtn').classList.add('hidden');
-    document.getElementById('scoreBreakdown').classList.add('hidden');
-    
-    document.getElementById('question').classList.remove('hidden');
-    document.getElementById('btns').classList.remove('hidden');
-    document.getElementById('ninongMeter').classList.remove('hidden');
-    
-    initQuiz();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+    /**
+     * Hide share modal
+     */
+    hideShareModal: function() {
+        document.getElementById('shareModal').classList.add('hidden');
+    },
 
-// ========== INITIALIZE ==========
+    /**
+     * Load history in share modal
+     */
+    loadShareHistory: function() {
+        const sessions = StorageManager.getAll();
+        const listEl = document.getElementById('shareHistoryList');
+        
+        if (sessions.length === 0) {
+            listEl.innerHTML = '<div class="history-empty">No quiz history yet.</div>';
+            return;
+        }
+        
+        listEl.innerHTML = sessions.reverse().slice(0, 10).map(session => {
+            const date = new Date(session.timestamp);
+            const approved = session.approved ? 
+                '<span style="color: #27ae60; font-weight: 700;">✓ Approved</span>' : 
+                '<span style="color: #f39c12; font-weight: 700;">⏳ Pending</span>';
+            
+            return `
+                <div class="history-item">
+                    <div class="history-date">${date.toLocaleDateString()} ${date.toLocaleTimeString()}</div>
+                    <div class="history-score">Score: ${session.score.percentage}% | ${approved}</div>
+                    <div class="history-prize">Prize: ₱${session.adjustedAmount || session.prize.amount}</div>
+                    <div class="history-code" style="font-family: monospace; font-size: 12px; color: #666;">
+                        Code: ${session.verificationCode}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    /**
+     * Download voucher as image (using html2canvas if available)
+     */
+    downloadVoucher: function() {
+        // Simple fallback: Open print dialog
+        alert('📸 Use your browser screenshot tool or print function to save the voucher!\n\nTip: Press Ctrl/Cmd + P to print, or take a screenshot.');
+        window.print();
+    },
+
+    // Update finishQuiz method to include verification code display:
+    finishQuiz: function() {
+        log('Quiz finished. Calculating results...');
+        
+        this.state.isQuizActive = false;
+        
+        // Calculate score
+        this.state.scoreData = ScoringEngine.calculateScore(
+            this.state.answers,
+            this.state.selectedQuestions
+        );
+        
+        // Calculate prize
+        this.state.prizeData = ScoringEngine.calculatePrize(this.state.scoreData);
+        
+        // Generate message
+        this.state.messageData = MessageGenerator.generate(
+            this.state.scoreData,
+            this.state.prizeData
+        );
+        
+        // Save to storage and get session with verification code
+        const savedSession = StorageManager.save({
+            score: this.state.scoreData,
+            prize: this.state.prizeData,
+            answers: this.state.answers,
+            questions: this.state.selectedQuestions.map(q => q.id)
+        });
+        
+        // Store verification code for display
+        if (savedSession) {
+            this.state.verificationCode = savedSession.verificationCode;
+        }
+        
+        // Show results
+        this.showResults();
+    },
+
+    // Update fillVoucherData to include verification code:
+    fillVoucherData: function() {
+        const { scoreData, prizeData, verificationCode } = this.state;
+        
+        // ... existing code ...
+        
+        // Voucher code (use actual verification code)
+        const voucherCodeEl = document.getElementById('voucherCode');
+        if (voucherCodeEl && verificationCode) {
+            voucherCodeEl.textContent = verificationCode;
+        }
+        
+        // Share verification code
+        const shareCodeEl = document.getElementById('shareVerificationCode');
+        if (shareCodeEl && verificationCode) {
+            shareCodeEl.textContent = verificationCode;
+        }
+    },
+};
+
+// Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    initQuiz();
+    App.init();
 });
 
-window.restartQuiz = restartQuiz;
+// Export for debugging (if needed)
+if (typeof window !== 'undefined') {
+    window.PamaskoApp = App;
+    window.AppConfig = CONFIG;
+    window.AppStorage = StorageManager;
+}
